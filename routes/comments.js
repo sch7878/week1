@@ -80,6 +80,11 @@ router.put("/:commentId", async (req,res) => {
       success: true, 
       Message:'댓글이 수정되었습니다' 
     });
+    } else {
+        res.status(400).json({
+          success:false, 
+          errorMessage:'데이터 형식이 올바르지 않습니다.'
+        })
     }
 
    
