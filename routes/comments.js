@@ -5,21 +5,36 @@ const Comments = require('../schemas/comment.js')
 
 //댓글 조회
 router.get('/:postId', async (req,res) =>{
-  const comments = await Comments.find({});
+  const {postId} = req.params;
 
-  const results = comments.map((comment)=> {
-    return {
-      "commentId" : comment._id,
-      "user" : comment.user,
-      "content" : comment.content,
-      "createdAt" : comment.createdAt,
+  try {
+  const comments = await Comments.find({_id:postId});
+    if (comments.length) {
+      const results = comments.map((comment)=> {
+        return {
+          "commentId" : comment._id,
+          "user" : comment.user,
+          "content" : comment.content,
+          "createdAt" : comment.createdAt,
+        }
+      }).reverse();
+
+      res.status(200).json({
+        "data":results
+      })
+    } else {
+      return res.status(400).json({
+        success: false, 
+        errorMessage:"데이터형식이 올바르지 않습니다"
+      })
     }
-  }).reverse();
-
-  res.status(200).json({
-    "data":results
-  })
-
+    
+  } catch {
+    return res.status(400).json({
+      success: false, 
+      errorMessage:"데이터형식이 올바르지 않습니다"
+    })
+  }
 
 })
 
