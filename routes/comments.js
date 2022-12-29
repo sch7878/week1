@@ -8,7 +8,8 @@ router.get('/:postId', async (req,res) =>{
   const {postId} = req.params;
 
   try {
-  const comments = await Comments.find({_id:postId});
+  const comments = await Comments.find({postId});
+  console.log(comments)
     if (comments.length) {
       const results = comments.map((comment)=> {
         return {
@@ -26,14 +27,14 @@ router.get('/:postId', async (req,res) =>{
     } else {
       return res.status(400).json({
         success: false, 
-        errorMessage:"데이터형식이 올바르지 않습니다"
+        errorMessage:"데이터형식이 올바르지 않습니다."
       })
     }
     
   } catch {
     return res.status(400).json({
       success: false, 
-      errorMessage:"데이터형식이 올바르지 않습니다"
+      errorMessage:"데이터형식이 올바르지 않습니다.."
     })
   }
 
@@ -41,6 +42,7 @@ router.get('/:postId', async (req,res) =>{
 
 //댓글 작성
 router.post("/:postId", async (req,res) =>{
+  const {postId} = req.params;
   const {user,password,content} = req.body;
   
 
@@ -51,17 +53,18 @@ router.post("/:postId", async (req,res) =>{
     if(user.length===0||password.length===0 ||content.length===0) {
     res.status(400).json({
       success:false, 
-      errorMessage:'데이터 형식이 올바르지 않습니다.'
+      errorMessage:'데이터 형식이 올바르지 않습니다..'
     })
     }
 
-    const createdComments = await Comments.create({user,password,content,createdAt});
+    const createdComments = await Comments.create({postId,user,password,content,createdAt});
 
     res.status(200).json({
       success:true, 
       Message:'댓글이 등록되었습니다'
     })
-  } catch {
+  } catch(err) {
+    console.log(err)
     res.status(400).json({
       success:false, 
       errorMessage:'데이터 형식이 올바르지 않습니다.'
