@@ -17,11 +17,12 @@ router.get('/:postId', async (req,res) =>{
           "content" : comment.content,
           "createdAt" : comment.createdAt,
         }
-      }).reverse();
+      }).reverse()
 
-      res.status(200).json({
+      return res.status(200).json({
         "data":results
-      })
+      }) 
+    
     } else {
       return res.status(400).json({
         success: false, 
